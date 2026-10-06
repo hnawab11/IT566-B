@@ -1,0 +1,1 @@
+This is the project folder for my first assignment, Diary Entries. THis program enables reading and writing to diary files, and multiple diary files can be used.
