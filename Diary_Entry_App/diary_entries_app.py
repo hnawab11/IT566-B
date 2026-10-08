@@ -1,4 +1,6 @@
-import datetime, json
+import datetime
+import json
+
 
 def print_diary(diary_entries):
     for date in diary_entries:
@@ -7,6 +9,8 @@ def print_diary(diary_entries):
         day = date[6]+date[7]
         output = year + "-" + month + "-" + day
         print(f"{output}: {diary_entries[date]}")
+
+
 def sort_diary_by_date(diary_entries, sort_type):
     sorted_diary = {}
     if sort_type == "dsc":
@@ -17,36 +21,41 @@ def sort_diary_by_date(diary_entries, sort_type):
         for date in sorted(diary_entries,reverse=False):
             sorted_diary[date] = diary_entries[date]
         return sorted_diary
+
+    
 def filter_diary_by_date(diary_entries, desired_date, filter_type):
     search_list = []
-    if(filter_type == "after"):
+    if filter_type == "after":
         for key in diary_entries.keys():
             # print(key)
             if key > desired_date:
                 search_list.append((key, diary_entries.get(key)))
-                # search_list.append(diary_entries.get(key))
         return search_list
-    elif(filter_type == "before"):
+    elif filter_type == "before":
         for key in diary_entries.keys():
             # print(key)
             if key < desired_date:
                 search_list.append((key, diary_entries.get(key)))
-                # search_list.append(diary_entries.get(key))
         return search_list
     
 def save_diary_to_file(diary_entries, filename):
     with open(filename, "w") as f:
         json.dump(diary_entries, f, indent = 4)
+
+
 def load_diary_from_file(filename):
     with open(filename, "r") as f:
         return json.load(f)
+    
    
 def create_diary_dictionary():
     diary_dictionary = {}
     return diary_dictionary
 
+
 def add_diary_entry(diary_entries, date, body):
     diary_entries[date] = body
+
 
 def search_diary_entry_by_date(diary_entries, search_date):
     search_result = str(diary_entries.get(search_date))
@@ -112,7 +121,6 @@ def prompt_user():
                             filtered_result = filter_diary_by_date(diary,filter_date,filter_type)
                             if len(filtered_result) != 0:
                                 for results in filtered_result:
-                                    # print(results[0][0])
                                     year_formatted = results[0][0]+ results[0][1]+ results[0][2]+ results[0][3]
                                     month_formatted = results[0][4]+ results[0][5]
                                     days_formatted = results[0][6] + results[0][7]
@@ -130,11 +138,10 @@ def prompt_user():
 
         user_choice = input("Continue in main menu?\n")
 
-# prompt_user()
-
 
 def main():
     prompt_user()
+
 
 if __name__ == "__main__":
     main()
