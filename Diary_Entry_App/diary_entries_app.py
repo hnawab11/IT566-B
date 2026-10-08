@@ -105,15 +105,15 @@ def prompt_user():
                             date=""
                             body=""
                             while len(date) == 0 or len(body) == 0:
-                                date = input("enter date for this entry in YYYYMMDD format. i.e 20261008")
-                                body = input("Enter the text content for this entry")
+                                date = input("enter date for this entry in YYYYMMDD format. i.e 20261008\n")
+                                body = input("Enter the text content for this entry\n")
 
                             add_diary_entry(diary,date,body)
                         case "save":
                             diary = sort_diary_by_date(diary,"asc")
                             save_diary_to_file(diary, filename)
                         case "search":
-                            search_date = input("Enter search date in YYYYMMDD format. i.e 20200130")
+                            search_date = input("Enter search date in YYYYMMDD format. i.e 20200130\n")
                             print(search_diary_entry_by_date(diary,search_date))
                         case "filter":
                             filter_date = input("Enter search date in YYYYMMDD format. i.e 20200130\n")
