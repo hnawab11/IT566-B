@@ -84,21 +84,31 @@ def prompt_user():
                 failure = True
                 filename = ""
                 diary = dict()
+                # nofileexists = True
                 while failure == True:
-                    filename = input("Please enter a filename for diary. Must end in .json\n")
+                    filename = input("Please enter a filename for diary. Must end in .json. Or type [quit] to exit\n")
+                    if filename == "quit":
+                        failure = False
                     if ".json" in filename:
                         failure = False
                         try:
                             diary = load_diary_from_file(filename)
+                            print(f"Diary file has been loaded\nDiary Options Menu")
                             failure = False
                         except:
                             print("Error. File not found. Please create file first before loading or ensure filename is correct")
+                            # nofileexists = True
                             failure = True
-                        
-                print("Diary file has been loaded")
-                print("Diary Options Menu")
+                            break
+                            # failure = True
+                    
+
+                         
+                # print(f"Diary file has been loaded\nDiary Options Menu")
+                # print("Diary Options Menu")
                 user_diary_menu_choice = "yes"
-                while user_diary_menu_choice == "yes":
+                while user_diary_menu_choice == "yes" and (failure == False and filename != "quit"):
+                    # print(f"Diary file has been loaded\nDiary Options Menu")
                     user_diary_menu_choice = input("[Add] Adds an Entry [Search] Searches for entry by date [Filter] Filter entries before or after a certain date[Save] Saves new entries to file [Print] Prints the entire diary\n")
                     match user_diary_menu_choice:
                         case "add":
@@ -117,7 +127,11 @@ def prompt_user():
                             print(search_diary_entry_by_date(diary,search_date))
                         case "filter":
                             filter_date = input("Enter search date in YYYYMMDD format. i.e 20200130\n")
-                            filter_type = input(f"Are you search for diary entries before or after {filter_date}?\n")
+                            filter_year_formatted = filter_date[0]+ filter_date[1]+ filter_date[2]+ filter_date[3]
+                            filter_month_formatted = filter_date[4]+ filter_date[5]
+                            filter_days_formatted = filter_date[6] + filter_date[7]
+                            filter_date_formatted = f"{filter_year_formatted}-{filter_month_formatted}-{filter_days_formatted}"
+                            filter_type = input(f"Are you search for diary entries [BEFORE] or [AFTER] {filter_date_formatted}?\n")
                             filtered_result = filter_diary_by_date(diary,filter_date,filter_type)
                             if len(filtered_result) != 0:
                                 for results in filtered_result:
@@ -131,12 +145,12 @@ def prompt_user():
                             print_diary(diary)
                         case _:
                             print("error. Please select add, load, search, print")
-                    user_diary_menu_choice = input("Continue in user diary menu?\n")
+                    user_diary_menu_choice = input("Continue in user diary menu? [YES] [NO] \n")
                         
             case _:
-                print("error. Please select create, load, or yes to continue. Type anything else to exit")
+                print("Error. Please select create, load, or yes to continue. Type anything else to exit")
 
-        user_choice = input("Continue in main menu?\n")
+        user_choice = input("Continue in main menu? [YES] [NO]\n")
 
 
 def main():
