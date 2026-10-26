@@ -1,6 +1,7 @@
 import datetime
 import json
 
+__all__ = ['prompt_user']
 
 def print_diary(diary_entries):
     for date in diary_entries:
@@ -18,6 +19,7 @@ def sort_diary_by_date(diary_entries, sort_type):
             sorted_diary[date] = diary_entries[date]
         return sorted_diary
     elif sort_type == "asc":
+        sorted_diary = {}
         for date in sorted(diary_entries,reverse=False):
             sorted_diary[date] = diary_entries[date]
         return sorted_diary

@@ -1,6 +1,10 @@
-import diary_entries_app
+from diary_entries_app import *
+
+
+# print(test)
 
 def main():
-    diary_entries_app.prompt_user()
+    prompt_user()
     
 main()
+

@@ -1,0 +1,1 @@
+This is the project folder for my second assignment, Expense Tracker. THis program enables reading and writing of daily expenses, which can be save to expensive files, and multiple expense files can be used. You can search, filter, create, and delete expenses
