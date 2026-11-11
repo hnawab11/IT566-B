@@ -20,7 +20,8 @@ d3s = d3.strftime("%Y-%m-%d %I:%M%p")
 d4s = d4.strftime("%Y-%m-%d %I:%M%p")
 def add_expense_entry(datetime_dictionary,datetime_object,expense):
     datetime_dictionary[datetime_object] = expense
-
+def add_expense_entry_test(datetime_dictionary,datetime_object,expense,category):
+    datetime_dictionary[datetime_object] = [expense, category]
 def parse_datetime_dictionary_to_string_dictionary(datetime_dictionary):
     expense_dictionary_string_format = {}
     for line in datetime_dictionary:
@@ -30,6 +31,7 @@ def parse_datetime_dictionary_to_string_dictionary(datetime_dictionary):
 
 def sort_datetime_dictionary(datetime_dictionary):
     sorted_dictionary = dict(sorted(datetime_dictionary.items(),reverse=False))
+    
     return sorted_dictionary
 
 expenses_dict = {d1:1.92,d2:7.95,d3:15,d4:40.55}
@@ -43,8 +45,8 @@ def print_expense_dict_string(expenses_dict_string):
     output = "|   Date  |  Time | Expense\n"
     total = 0
     for line in expenses_dict_string:
-        output += f'{line.strftime("%Y-%m-%d %I:%M%p")} ${expenses_dict_string[line]}\n'
-        total += expenses_dict_string[line]
+        output += f'{line.strftime("%Y-%m-%d %I:%M%p")} ${expenses_dict_string[line]}\n' ##[0]}'## Category:{expenses_dict_string[line][1]}\n'
+        total += expenses_dict_string[line] ##[0]
     output += f'Total: ${round(total,2)}'
     return output
     
@@ -61,7 +63,12 @@ def search_datetime_dictionry(datetime_dictionary,search_datetime_date):
         return "Not found"
     return search_results
     
-
+def search_for_dates_within_range(datetime_dictionary, start_datetime_date, end_datetime_date):
+    filter_results = {}
+    for dates in datetime_dictionary:
+        if dates.date() >= start_datetime_date.date() and dates.date() <= end_datetime_date.date():
+            filter_results[dates] = datetime_dictionary[dates]
+    return filter_results
 # print(search_datetime_dictionry(expenses_dict, d5))
 
 
@@ -96,7 +103,7 @@ def prompt_user():
     print("WELCOME TO PYTHON EXPENSE TRACKER APP\nWhat would you like to do?")
     user_choice = "yes"
     while user_choice == "yes":
-        user_choice = input("[CREATE] EXPENSE FILE|[LOAD] EXPENSE FILE|\n")
+        user_choice = input("[CREATE] EXPENSE FILE |[LOAD] EXPENSE FILE |\n")
         match user_choice:
             case "create":
                 failure = True
@@ -136,8 +143,10 @@ def prompt_user():
                 user_expense_tracker_menu_choice = "yes"
                 while user_expense_tracker_menu_choice == "yes" and (failure == False and filename != "quit"):
                     # print(f"Diary file has been loaded\nDiary Options Menu")
-                    user_expense_tracker_menu_choice = input("[Add] Adds an Expense [Search] Searches for expenses by date [Filter] Filter expenses before or after a certain date[Save] Saves new expenses to file [Print] Prints the entire expense tracker list\n")
-                    print("DEBUG: ", expenses) ##will this be datetime dict or datetime string dict
+                    user_expense_tracker_menu_choice = input("[Add] Adds an Expense [Search] Searches for expenses by date"
+                                                            "[Filter] Filter expenses within a certain date range [Save] Saves new expenses to file" 
+                                                            "[Print] Prints the entire expense tracker list\n")
+                    # print("DEBUG: ", expenses) ##will this be datetime dict or datetime string dict
                     match user_expense_tracker_menu_choice:
                         case "add":
                             date_entry=""
@@ -149,6 +158,7 @@ def prompt_user():
                                 expense_entry = input("Enter the expense for this entry in dollars. i.e 8.99\n")
                                 datetime_key_object = datetime(int(date_entry[0:4]),int(date_entry[4:6]),int(date_entry[6:9]),int(time_entry[0:2]),int(time_entry[3:5]))
                             add_expense_entry(expenses,datetime_key_object,float(expense_entry))
+                            # add_expense_entry_test(expenses,datetime_key_object,float(expense_entry),"food")
                         case "save":
                             expenses = sort_datetime_dictionary(expenses)
                             save_expenses_to_file(parse_datetime_dictionary_to_string_dictionary(expenses), filename)
@@ -163,25 +173,33 @@ def prompt_user():
 
                             # print(search_diary_entry_by_date(diary,search_date))
                         case "filter":
-                            filter_date = input("Enter search date in YYYYMMDD format. i.e 20200130\n")
-                            filter_year_formatted = filter_date[0]+ filter_date[1]+ filter_date[2]+ filter_date[3]
-                            filter_month_formatted = filter_date[4]+ filter_date[5]
-                            filter_days_formatted = filter_date[6] + filter_date[7]
-                            filter_date_formatted = f"{filter_year_formatted}-{filter_month_formatted}-{filter_days_formatted}"
-                            filter_type = input(f"Are you search for diary entries [BEFORE] or [AFTER] {filter_date_formatted}?\n")
-                            filtered_result = filter_diary_by_date(diary,filter_date,filter_type)
-                            if len(filtered_result) != 0:
-                                for results in filtered_result:
-                                    year_formatted = results[0][0]+ results[0][1]+ results[0][2]+ results[0][3]
-                                    month_formatted = results[0][4]+ results[0][5]
-                                    days_formatted = results[0][6] + results[0][7]
-                                    print(f"{year_formatted}-{month_formatted}-{days_formatted}: {results[1]}")
+                            filter_start_date = input("Enter start date in YYYYMMDD format. i.e 20200130\n")
+                            filter_start_date_object = datetime(int(filter_start_date[0:4]),int(filter_start_date[4:6]),int(filter_start_date[6:9]))
+                            filter_end_date = input("Enter end date in YYYYMMDD format. i.e 20230528\n")
+                            filter_end_date_object = datetime(int(filter_end_date[0:4]),int(filter_end_date[4:6]),int(filter_end_date[6:9]))
+                            filtered_result = search_for_dates_within_range(expenses,filter_start_date_object,filter_end_date_object)
+                            if(filtered_result != {}):
+                                print(print_expense_dict_string(filtered_result))
                             else:
-                                print("Nothing found")
+                                print("No dates for this date range query found")
+                            # filter_year_formatted = filter_date[0]+ filter_date[1]+ filter_date[2]+ filter_date[3]
+                            # filter_month_formatted = filter_date[4]+ filter_date[5]
+                            # filter_days_formatted = filter_date[6] + filter_date[7]
+                            # filter_date_formatted = f"{filter_year_formatted}-{filter_month_formatted}-{filter_days_formatted}"
+                            # filter_type = input(f"Are you search for diary entries [BEFORE] or [AFTER] {filter_date_formatted}?\n")
+                            # filtered_result = filter_diary_by_date(diary,filter_date,filter_type)
+                            # if len(filtered_result) != 0:
+                            #     for results in filtered_result:
+                            #         year_formatted = results[0][0]+ results[0][1]+ results[0][2]+ results[0][3]
+                            #         month_formatted = results[0][4]+ results[0][5]
+                            #         days_formatted = results[0][6] + results[0][7]
+                            #         print(f"{year_formatted}-{month_formatted}-{days_formatted}: {results[1]}")
+                            # else:
+                            #     print("Nothing found")
                         case "print":
                             print(print_expense_dict_string(expenses))
                         case _:
-                            print("error. Please select add, load, search, print")
+                            print("Error. Please select add, load, search, print")
                     user_expense_tracker_menu_choice= input("Continue in user diary menu? [YES] [NO] \n")
                         
             case _:
