@@ -31,7 +31,6 @@ def parse_datetime_dictionary_to_string_dictionary(datetime_dictionary):
 
 def sort_datetime_dictionary(datetime_dictionary):
     sorted_dictionary = dict(sorted(datetime_dictionary.items(),reverse=False))
-    
     return sorted_dictionary
 
 expenses_dict = {d1:1.92,d2:7.95,d3:15,d4:40.55}
@@ -235,4 +234,4 @@ def prompt_user():
 
         user_choice = input("Continue in main menu? [YES] [NO]\n")
 
-prompt_user()
+# prompt_user()
