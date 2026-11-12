@@ -1,21 +1,12 @@
-# from expense_tracker_app import *
+from expense_tracker_app import *
 
-# def main():
-#     prompt_user()
+def main():
+    prompt_user()
     
-# main()
+main()
 
 
-# if __name__ == "__main__":
-#     main()
-# else:
-#     print(__name__, "has been imported")
-
-
-kracka = "run craka run, the democrats won"
-
-def test(nput):
-    nput = 30
-    return nput
-
-kracka = test(kracka)
+if __name__ == "__main__":
+    main()
+else:
+    print(__name__, "has been imported")
