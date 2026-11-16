@@ -176,8 +176,9 @@ def prompt_user():
                                 expense_entry = input("Enter the expense for this entry in dollars. i.e 8.99\n")
                                 datetime_key_object = datetime(int(date_entry[0:4]),int(date_entry[4:6]),int(date_entry[6:9]),int(time_entry[0:2]),int(time_entry[3:5]))
                                 category_entry = input("enter category for this expense")
-                            # add_expense_entry(expenses,datetime_key_object,float(expense_entry))
-                            add_expense_entry_test(expenses,datetime_key_object,float(expense_entry),category_entry)
+                            add_expense_entry(expenses,datetime_key_object,float(expense_entry))
+                            print(datetime_key_object in expenses)
+                            # add_expense_entry_test(expenses,datetime_key_object,float(expense_entry),category_entry)
                         case "save":
                             expenses = sort_datetime_dictionary(expenses)
                             save_expenses_to_file(parse_datetime_dictionary_to_string_dictionary(expenses), filename)
